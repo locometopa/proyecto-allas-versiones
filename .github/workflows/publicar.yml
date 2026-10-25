@@ -1,0 +1,22 @@
+name: Publicar release
+# Al subir un paquete firmado a paquetes/, se crea la release vX.Y con el zip adjunto y las novedades del CHANGELOG.
+on:
+  push:
+    branches: [main]
+    paths: ["paquetes/*.zip"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Crear las releases que falten
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for z in paquetes/PROYECTO_ALLAS_actualizacion_*.zip; do
+            [ -f "$z" ] || continue
+            python3 .github/publicar_release.py "$z" --repo "${{ github.repository }}"
+          done
