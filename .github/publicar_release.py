@@ -39,7 +39,8 @@ def main():
         return
     r = subprocess.run(["gh", "release", "view", f"v{v}", "--repo", a.repo], capture_output=True)
     if r.returncode == 0:
-        sys.exit(f"La release v{v} ya existe; no se ha cambiado nada.")
+        print(f"La release v{v} ya existe; no se ha cambiado nada.")
+        return
     subprocess.run(["gh", "release", "create", f"v{v}", a.paquete, "--repo", a.repo, "--title", f"Versión {v}", "--notes", notas],
                    check=True)
     print("Publicada.")
